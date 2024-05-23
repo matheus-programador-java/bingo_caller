@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo da Paróquia São Sebastião</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f5e6cc; /* Amarelo sépia claro */
+            margin: 0;
+            padding: 20px 0; /* Adicionando espaçamento superior e inferior */
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        h1 {
+            margin-top: 100px; /* Ajustando o espaçamento superior */
+            font-size: 2.5em;
+            color: #333;
+            text-shadow: 1px 1px 2px #fff;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(7, 40px); /* 7 colunas para 60 pedras */
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .grid-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .grid-item label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        .grid-item input[type="checkbox"]:checked + label {
+            background-color: blue;
+            color: white;
+            border: 1px solid blue;
+        }
+        .grid-item input[type="checkbox"].last-checked + label {
+            background-color: lightgreen; /* Tom de verde mais claro */
+            border-color: #8cc46c; /* Verde mais claro para a borda */
+        }
+        .reset-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff8080; /* Vermelho claro */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .reset-button:hover {
+            background-color: #ff3333; /* Vermelho mais escuro ao passar o mouse */
+        }
+        footer {
+            margin-top: 50px; /* Espaçamento superior para o rodapé */
+            width: 100%;
+            text-align: right;
+            font-family: 'Times New Roman', Times, serif;
+            color: #777;
+        }
+        hr {
+            width: 80%; /* Largura do traço horizontal */
+            border-top: 1px solid #ccc; /* Cor do traço horizontal */
+            margin-bottom: 20px; /* Espaçamento inferior para separar do conteúdo */
+        }
+    </style>
+</head>
+<body>
+    <h1>Bingo da Paróquia São Sebastião</h1>
+    <div class="grid-container">
+        <!-- Generate checkboxes -->
+        <!-- Loop to create 60 checkboxes -->
+        <script>
+            for (let i = 1; i <= 60; i++) {
+                document.write('<div class="grid-item"><input type="checkbox" id="checkbox' + i + '" onchange="checkboxChanged(this)"><label for="checkbox' + i + '">' + i + '</label></div>');
+            }
+        </script>
+    </div>
+    <button class="reset-button" onclick="resetCheckboxes()">Reset</button>
+    
+    <!-- Adicionando áudios -->
+    <audio id="checkedSound">
+        <source src="audio/checked_sound.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="resetSound">
+        <source src="audio/reset_sound.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <footer>
+        <hr>
+        <p style="font-style: italic;">Desenvolvido por <span style="font-style: normal; margin-right: 10px;">Matheus R. Fernandes</span></p>
+    </footer>
+
+    <script>
+        function playCheckedSound() {
+            document.getElementById('checkedSound').play();
+        }
+
+        function playResetSound() {
+            document.getElementById('resetSound').play();
+        }
+
+        function checkboxChanged(checkbox) {
+            const checkboxes = document.querySelectorAll('.grid-item input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.classList.remove('last-checked');
+            });
+            if (checkbox.checked) {
+                playCheckedSound();
+                checkbox.classList.add('last-checked');
+            }
+        }
+
+        function resetCheckboxes() {
+            const checkboxes = document.querySelectorAll('.grid-item input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.classList.remove('last-checked');
+            });
+            playResetSound();
+        }
+    </script>
+</body>
+</html>
