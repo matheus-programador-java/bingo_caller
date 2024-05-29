@@ -17,16 +17,25 @@
             box-sizing: border-box;
         }
         h1 {
-            margin-top: 100px; /* Ajustando o espaçamento superior */
+            margin-top: 80px; /* Ajustando o espaçamento superior */
             font-size: 2.5em;
             color: #333;
             text-shadow: 1px 1px 2px #fff;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px; /* Espaçamento entre grid e painel */
         }
         .grid-container {
             display: grid;
             grid-template-columns: repeat(9, 40px); /* 9 colunas para 75 pedras */
             gap: 10px;
             margin-top: 20px;
+            border: 2px solid rgba(136, 136, 136, 0.3); /* Borda cinza clara com transparência */
+            padding: 10px; /* Espaçamento interno */
+            border-radius: 5px; /* Cantos arredondados */
         }
         .grid-item {
             display: flex;
@@ -58,7 +67,30 @@
         }
         .grid-item input[type="checkbox"].last-checked + label {
             background-color: lightgreen; /* Tom de verde mais claro */
-            border-color: #8cc46c; /* Verde mais claro para a borda */
+            border-color: lightgreen; /* Verde mais claro para a borda */
+        }
+        .last-checked-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 440px; /* Mesma largura do grid-container (9 colunas x 40px + 8 gaps x 10px) */
+            height: 475px; /* Ajuste conforme necessário */
+            border: 2px solid rgba(136, 136, 136, 0.3); /* Borda cinza clara com transparência */
+            border-radius: 5px; /* Cantos arredondados */
+            margin-top: 20px;
+        }
+        .last-checked-panel span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px; /* Aumentando o tamanho do conteúdo */
+            height: 200px; /* Aumentando o tamanho do conteúdo */
+            border-radius: 50%;
+            background-color: transparent; /* Iniciando sem fundo */
+            color: transparent; /* Iniciando sem cor de texto */
+            font-size: 6em; /* Aumentando o tamanho do texto */
+            font-weight: bold;
+            border: none; /* Removendo a borda inicial */
         }
         .reset-button {
             margin-top: 20px;
@@ -89,14 +121,19 @@
 </head>
 <body>
     <h1>Bingo da Paróquia São Sebastião</h1>
-    <div class="grid-container">
-        <!-- Generate checkboxes -->
-        <!-- Loop to create 75 checkboxes -->
-        <script>
-            for (let i = 1; i <= 75; i++) {
-                document.write('<div class="grid-item"><input type="checkbox" id="checkbox' + i + '" onchange="checkboxChanged(this)"><label for="checkbox' + i + '">' + i + '</label></div>');
-            }
-        </script>
+    <div class="container">
+        <div class="grid-container">
+            <!-- Generate checkboxes -->
+            <!-- Loop to create 75 checkboxes -->
+            <script>
+                for (let i = 1; i <= 75; i++) {
+                    document.write('<div class="grid-item"><input type="checkbox" id="checkbox' + i + '" onchange="checkboxChanged(this)"><label for="checkbox' + i + '">' + i + '</label></div>');
+                }
+            </script>
+        </div>
+        <div class="last-checked-panel" id="lastCheckedPanel">
+            <span id="lastCheckedNumber">--</span>
+        </div>
     </div>
     <button class="reset-button" onclick="resetCheckboxes()">Reset</button>
     
@@ -112,7 +149,7 @@
 
     <footer>
         <hr>
-        <p style="font-style: italic;">Desenvolvido por <span style="font-style: normal; margin-right: 10px;">Matheus R. Fernandes</span></p>
+        <p style="font-style: italic;">Developed by <span style="font-style: normal; margin-right: 10px;">Matheus R. Fernandes</span></p>
     </footer>
 
     <script>
@@ -132,6 +169,29 @@
             if (checkbox.checked) {
                 playCheckedSound();
                 checkbox.classList.add('last-checked');
+                updateLastChecked(checkbox.id.replace('checkbox', ''));
+            } else {
+                checkbox.classList.remove('last-checked');
+                if (document.querySelector('.last-checked')) {
+                    updateLastChecked(document.querySelector('.last-checked').id.replace('checkbox', ''));
+                } else {
+                    updateLastChecked('--');
+                }
+            }
+        }
+
+        function updateLastChecked(number) {
+            const lastCheckedNumber = document.getElementById('lastCheckedNumber');
+            if (number === '--') {
+                lastCheckedNumber.innerText = '--';
+                lastCheckedNumber.style.backgroundColor = 'transparent';
+                lastCheckedNumber.style.color = 'transparent';
+                lastCheckedNumber.style.border = 'none';
+            } else {
+                lastCheckedNumber.innerText = number;
+                lastCheckedNumber.style.backgroundColor = 'lightgreen';
+                lastCheckedNumber.style.color = 'white';
+                lastCheckedNumber.style.border = '2px solid lightgreen';
             }
         }
 
@@ -141,6 +201,7 @@
                 checkbox.checked = false;
                 checkbox.classList.remove('last-checked');
             });
+            updateLastChecked('--');
             playResetSound();
         }
     </script>
